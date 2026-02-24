@@ -212,11 +212,18 @@ p {
 }
 
 .hero-content {
-    text-align: center;
-    max-width: 900px;
+    display: grid;
+    grid-template-columns: 1.2fr 1fr;
+    align-items: center;
+    gap: 60px;
+    max-width: 1100px;
     margin: 0 auto;
     position: relative;
     z-index: 10;
+}
+
+.hero-text {
+    text-align: left;
 }
 
 .hero-subtitle {
@@ -258,6 +265,94 @@ p {
 
 .bento-card.dark .mono-caps {
     color: rgba(255, 255, 255, 0.5);
+}
+
+/* --- Phone Mockup --- */
+.hero-visual {
+    display: flex;
+    justify-content: flex-end;
+}
+
+@keyframes fade-in {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.phone-mockup {
+    width: 280px;
+    height: 560px;
+    background: #050505;
+    border: 10px solid #050505;
+    border-radius: 46px;
+    position: relative;
+    box-shadow: 0 50px 100px -20px rgba(0, 0, 0, 0.4), 0 30px 60px -30px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(255, 255, 255, 0.1);
+}
+
+.phone-status-bar {
+    height: 44px;
+    width: 100%;
+    position: absolute;
+    top: 0;
+    left: 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    padding: 0 28px 8px;
+    color: #0A0A0A;
+    font-family: var(--font-mono);
+    font-size: 10px;
+    font-weight: 500;
+    z-index: 20;
+}
+
+.phone-status-icons {
+    display: flex;
+    gap: 8px;
+}
+
+.phone-screen {
+    width: 100%;
+    height: 100%;
+    background: #FFFFFF;
+    border-radius: 42px;
+    overflow: hidden;
+    position: relative;
+}
+
+.vltc-logo-container {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.vltc-logo {
+    font-size: 60px;
+    font-family: var(--font-serif);
+    font-weight: 700;
+    color: #0A0A0A;
+    letter-spacing: -0.04em;
+    animation: fade-in 1.2s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.phone-home-indicator {
+    position: absolute;
+    bottom: 8px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 120px;
+    height: 4px;
+    background: rgba(0, 0, 0, 0.1);
+    border-radius: 2px;
+    z-index: 20;
 }
 
 .col-span-1 {

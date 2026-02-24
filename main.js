@@ -1,4 +1,16 @@
-document.addEventListener('DOMContentLoaded', () => {
+const COMPONENTS = [
+    'nav',
+    'hero',
+    'interact',
+    'solution',
+    'monitoring',
+    'accessibility',
+    'cta-footer'
+];
+
+document.addEventListener('DOMContentLoaded', async () => {
+    await loadComponents();
+
     // 1. Initialize Intersection Observer for reveals
     const observerOptions = {
         root: null,
@@ -40,6 +52,23 @@ document.addEventListener('DOMContentLoaded', () => {
     // 4. Telemetry Pulse Logic
     initTelemetry();
 });
+
+async function loadComponents() {
+    const mounts = COMPONENTS
+        .map(name => ({
+            name,
+            mount: document.querySelector(`[data-component="${name}"]`)
+        }))
+        .filter(entry => entry.mount);
+
+    await Promise.all(mounts.map(async ({ name, mount }) => {
+        const response = await fetch(`components/${name}.html`);
+        if (!response.ok) {
+            throw new Error(`Failed to load component: ${name}`);
+        }
+        mount.innerHTML = await response.text();
+    }));
+}
 
 function initAIInteraction() {
     const questions = [
