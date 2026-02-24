@@ -204,7 +204,7 @@ p {
     overflow: hidden;
     padding-top: 140px;
     padding-bottom: 100px;
-    background-color: var(--bg-page);
+    background-color: #DDE3EA;
 }
 
 .hero::before {
@@ -221,6 +221,7 @@ p {
 }
 
 .hero-bg-video {
+    display: block;
     position: absolute;
     inset: 0;
     width: 100%;
@@ -228,6 +229,20 @@ p {
     object-fit: cover;
     z-index: 0;
     pointer-events: none;
+    opacity: 0;
+    transition: opacity 320ms ease;
+}
+
+.hero-bg-media {
+    position: absolute;
+    inset: 0;
+    background-color: #DDE3EA;
+    z-index: 0;
+    overflow: hidden;
+}
+
+.hero-bg-video.is-active {
+    opacity: 1;
 }
 
 .hero-content {

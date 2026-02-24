@@ -10,6 +10,7 @@ const COMPONENTS = [
 
 document.addEventListener('DOMContentLoaded', async () => {
     await loadComponents();
+    initHeroSeamlessBackground();
 
     // 1. Initialize Intersection Observer for reveals
     const observerOptions = {
@@ -112,11 +113,11 @@ function initAIInteraction() {
 
 function initTelemetry() {
     const tiles = [
-        { id: 'tile-markets', label: 'Financial Markets', normal: 'Tracking', updates: ['Volatility Spike', 'Bull Run', 'Market Flat', 'Tracking'] },
-        { id: 'tile-protection', label: 'Protection Pulse', normal: 'Secure', updates: ['Policy Review', 'Synced', 'Encrypted', 'Secure'] },
-        { id: 'tile-life', label: 'Life Circumstances', normal: 'Synced', updates: ['Update Detected', 'Planning', 'Locked', 'Synced'] },
-        { id: 'tile-health', label: 'Personal Health', normal: 'Live', updates: ['Vitals High', 'Rested', 'Optimized', 'Live'] },
-        { id: 'tile-cashflow', label: 'Cashflow Health', normal: 'Balanced', updates: ['Surplus', 'Budget Alert', 'Stable', 'Balanced'] }
+        { id: 'tile-markets', normal: 'Tracking', updates: ['Volatility Spike', 'Bull Run', 'Market Flat', 'Tracking'] },
+        { id: 'tile-protection', normal: 'Secure', updates: ['Policy Review', 'Synced', 'Encrypted', 'Secure'] },
+        { id: 'tile-life', normal: 'Synced', updates: ['Update Detected', 'Planning', 'Locked', 'Synced'] },
+        { id: 'tile-health', normal: 'Live', updates: ['Vitals High', 'Rested', 'Optimized', 'Live'] },
+        { id: 'tile-cashflow', normal: 'Balanced', updates: ['Surplus', 'Budget Alert', 'Stable', 'Balanced'] }
     ];
 
     setInterval(() => {
@@ -143,4 +144,73 @@ function initTelemetry() {
             tile.classList.remove('warning');
         }
     }, 4000);
+}
+
+function initHeroSeamlessBackground() {
+    const videos = Array.from(document.querySelectorAll('.hero-bg-video'));
+    if (videos.length < 2) return;
+
+    let activeIndex = 0;
+    let switching = false;
+    const crossfadeMs = 700;
+    const switchLeadSeconds = 0.9;
+    const nextStartOffsetSeconds = 0.08;
+
+    videos.forEach((video, index) => {
+        video.muted = true;
+        video.playsInline = true;
+        if (index !== activeIndex) {
+            video.pause();
+            video.currentTime = 0;
+            video.classList.remove('is-active');
+        } else {
+            video.classList.add('is-active');
+            void video.play().catch(() => { });
+        }
+    });
+
+    const activeVideo = () => videos[activeIndex];
+    const standbyVideo = () => videos[(activeIndex + 1) % videos.length];
+
+    const switchVideo = async () => {
+        if (switching) return;
+        switching = true;
+
+        const current = activeVideo();
+        const next = standbyVideo();
+
+        try {
+            next.currentTime = nextStartOffsetSeconds;
+            await next.play();
+        } catch (_) {
+            switching = false;
+            return;
+        }
+
+        next.classList.add('is-active');
+        current.classList.remove('is-active');
+
+        setTimeout(() => {
+            current.pause();
+            current.currentTime = 0;
+            activeIndex = (activeIndex + 1) % videos.length;
+            switching = false;
+        }, crossfadeMs + 40);
+    };
+
+    const tick = () => {
+        const current = activeVideo();
+        if (!current.duration || Number.isNaN(current.duration)) return;
+
+        if (current.duration - current.currentTime <= switchLeadSeconds) {
+            void switchVideo();
+        }
+    };
+
+    videos.forEach((video) => {
+        video.addEventListener('timeupdate', tick);
+        video.addEventListener('ended', () => {
+            void switchVideo();
+        });
+    });
 }
