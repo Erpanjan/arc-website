@@ -9,6 +9,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link rel="stylesheet" href="early-access.css">
+    <script src="early-access.js" defer></script>
 </head>
 
 <body>
@@ -16,7 +17,7 @@
         <span class="close-icon" aria-hidden="true"></span>
     </a>
     <main class="page-wrap">
-        <form class="early-access-form" action="#" method="post">
+        <form class="early-access-form" id="early-access-form" action="#" method="post">
             <div class="row two-col">
                 <div class="field">
                     <label for="first-name">First name</label>
@@ -44,6 +45,7 @@
             </div>
 
             <button type="submit" class="submit-btn">Submit</button>
+            <p class="submit-success" id="submit-success" role="status" aria-live="polite">Submit Success</p>
         </form>
     </main>
 </body>

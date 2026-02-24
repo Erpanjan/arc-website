@@ -5,10 +5,10 @@
     --line: #6f6f6f;
     --message-bg: #cdcdcd;
     --page-max: 860px;
-    --fs-label: clamp(0.9rem, 1.05vw, 1rem);
-    --fs-input: clamp(0.85rem, 1vw, 0.95rem);
-    --fs-textarea: clamp(0.9rem, 1.05vw, 1rem);
-    --fs-submit: clamp(1rem, 1.6vw, 1.25rem);
+    --fs-label: clamp(0.92rem, 1.08vw, 1rem);
+    --fs-input: clamp(0.88rem, 1.02vw, 0.95rem);
+    --fs-textarea: clamp(0.88rem, 1.02vw, 0.95rem);
+    --fs-submit: clamp(1rem, 1.55vw, 1.2rem);
 }
 
 * {
@@ -77,6 +77,18 @@ body {
     width: 100%;
 }
 
+.early-access-form.is-success {
+    min-height: clamp(320px, 50vh, 500px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.early-access-form.is-success .row,
+.early-access-form.is-success .submit-btn {
+    display: none;
+}
+
 .row {
     margin-bottom: clamp(18px, 2.6vw, 30px);
 }
@@ -93,6 +105,7 @@ body {
     font-size: var(--fs-label);
     line-height: 1.1;
     font-weight: 500;
+    font-family: inherit;
 }
 
 .field input {
@@ -141,6 +154,20 @@ body {
     cursor: pointer;
     margin-top: clamp(4px, 1.2vw, 10px);
     font-family: inherit;
+}
+
+.submit-success {
+    margin: 0;
+    font-size: clamp(1.35rem, 3vw, 2.1rem);
+    font-weight: 500;
+    color: var(--text-primary);
+    text-align: center;
+    display: none;
+    font-family: inherit;
+}
+
+.submit-success.is-visible {
+    display: block;
 }
 
 @media (max-width: 900px) {
