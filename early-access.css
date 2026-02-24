@@ -156,6 +156,11 @@ body {
     font-family: inherit;
 }
 
+.submit-btn:disabled {
+    opacity: 0.75;
+    cursor: not-allowed;
+}
+
 .submit-success {
     margin: 0;
     font-size: clamp(1.35rem, 3vw, 2.1rem);
@@ -167,6 +172,19 @@ body {
 }
 
 .submit-success.is-visible {
+    display: block;
+}
+
+.submit-error {
+    margin: 10px 0 0;
+    display: none;
+    text-align: center;
+    color: #b42318;
+    font-size: var(--fs-input);
+    font-family: inherit;
+}
+
+.submit-error.is-visible {
     display: block;
 }
 
