@@ -32,17 +32,28 @@ document.addEventListener('DOMContentLoaded', async () => {
     // 2. Handle smooth internal scrolling
     document.querySelectorAll('a[href^="#"]').forEach(anchor => {
         anchor.addEventListener('click', function (e) {
-            e.preventDefault();
             const targetId = this.getAttribute('href');
-            if (targetId === '#') return;
+            if (!targetId) return;
 
-            const targetElement = document.querySelector(targetId);
-            if (targetElement) {
+            e.preventDefault();
+
+            // Support explicit "back to top/hero" behavior for brand link and "#" links.
+            if (targetId === '#' || targetId === '#hero') {
                 window.scrollTo({
-                    top: targetElement.offsetTop - 120,
+                    top: 0,
                     behavior: 'smooth'
                 });
+                return;
             }
+
+            const targetElement = document.querySelector(targetId);
+            if (!targetElement) return;
+
+            const targetTop = Math.max(targetElement.offsetTop - 120, 0);
+            window.scrollTo({
+                top: targetTop,
+                behavior: 'smooth'
+            });
         });
     });
 
@@ -62,7 +73,9 @@ async function loadComponents() {
         .filter(entry => entry.mount);
 
     await Promise.all(mounts.map(async ({ name, mount }) => {
-        const response = await fetch(`components/${name}.html`);
+        const response = await fetch(`components/${name}.html?v=20260224`, {
+            cache: 'no-store'
+        });
         if (!response.ok) {
             throw new Error(`Failed to load component: ${name}`);
         }
