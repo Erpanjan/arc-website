@@ -63,6 +63,9 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     // 4. Telemetry Pulse Logic
     initTelemetry();
+
+    // 5. Page Flip Transition to Early Access
+    initFlipTransition();
 });
 
 async function loadComponents() {
@@ -212,5 +215,36 @@ function initHeroSeamlessBackground() {
         video.addEventListener('ended', () => {
             void switchVideo();
         });
+    });
+}
+
+function initFlipTransition() {
+    const overlay = document.createElement('div');
+    overlay.className = 'page-flip-overlay';
+    document.body.appendChild(overlay);
+
+    document.body.addEventListener('click', (e) => {
+        const link = e.target.closest('a');
+        if (link && link.getAttribute('href') && link.getAttribute('href').includes('early-access.html')) {
+            e.preventDefault();
+            overlay.classList.add('is-flipping');
+
+            // Wait for animation to finish before navigating
+            setTimeout(() => {
+                window.location.href = link.getAttribute('href');
+            }, 750);
+        }
+    });
+
+    // Reset overlay in case the user navigates back to this page
+    window.addEventListener('pageshow', (e) => {
+        if (e.persisted || overlay.classList.contains('is-flipping')) {
+            // briefly disable transition for instant reset
+            overlay.style.transition = 'none';
+            overlay.classList.remove('is-flipping');
+            setTimeout(() => {
+                overlay.style.transition = '';
+            }, 50);
+        }
     });
 }

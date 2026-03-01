@@ -71,6 +71,16 @@ body {
     max-width: var(--page-max);
     margin: 0 auto;
     padding: clamp(56px, 7vw, 94px) clamp(16px, 4vw, 54px) clamp(32px, 4vw, 48px);
+    opacity: 0;
+    transform: translateY(10px);
+    animation: fadeUpIn 0.8s ease-out 0.1s forwards;
+}
+
+@keyframes fadeUpIn {
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }
 
 .early-access-form {
@@ -196,6 +206,7 @@ body {
 }
 
 @media (max-width: 680px) {
+
     .field input,
     .field textarea,
     .submit-btn {
