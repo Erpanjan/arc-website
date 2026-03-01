@@ -262,6 +262,7 @@ p {
 
 .hero-subtitle {
     font-family: 'Playfair Display', serif;
+    font-weight: 400;
     font-style: italic;
     font-size: clamp(1.5rem, 3vw, 2rem);
     color: var(--text-secondary);
@@ -369,10 +370,9 @@ p {
 }
 
 .vltc-logo {
-    font-size: 33px;
+    font-size: 42px;
     font-family: 'Playfair Display', serif;
-    font-style: italic;
-    font-weight: 600;
+    font-weight: 700;
     color: #0A0A0A;
     letter-spacing: -0.02em;
     animation: fade-in 1.2s cubic-bezier(0.16, 1, 0.3, 1) forwards;
