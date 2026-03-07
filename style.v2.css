@@ -221,7 +221,7 @@ p {
 }
 
 .hero-bg-video {
-    display: block;
+    display: none;
     position: absolute;
     inset: 0;
     width: 100%;
@@ -260,11 +260,33 @@ p {
     text-align: left;
 }
 
+.hero-title-art {
+    margin-bottom: 24px;
+    font-size: clamp(2.9rem, 6vw, 5rem);
+    font-weight: 680;
+    line-height: 0.94;
+    letter-spacing: -0.03em;
+    color: var(--text-primary);
+    text-wrap: balance;
+}
+
+.hero-kicker {
+    margin-bottom: 16px;
+    color: var(--text-secondary);
+}
+
+.hero-title-em {
+    font-family: inherit;
+    font-style: normal;
+    font-weight: inherit;
+    letter-spacing: inherit;
+}
+
 .hero-subtitle {
-    font-family: 'Playfair Display', serif;
-    font-weight: 400;
-    font-style: italic;
-    font-size: clamp(1.5rem, 3vw, 2rem);
+    font-family: var(--font-sans);
+    font-weight: 300;
+    font-style: normal;
+    font-size: clamp(1rem, 1.8vw, 1.25rem);
     color: var(--text-secondary);
     margin-bottom: 40px;
     line-height: 1.3;
