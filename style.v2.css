@@ -393,10 +393,12 @@ p {
 
 .vltc-logo {
     font-size: 42px;
-    font-family: 'Playfair Display', serif;
-    font-weight: 700;
+    font-family: var(--font-serif);
+    font-weight: 900;
     color: #0A0A0A;
-    letter-spacing: -0.02em;
+    letter-spacing: -0.035em;
+    -webkit-text-stroke: 0.015em currentColor;
+    transform: scaleY(1.08);
     animation: fade-in 1.2s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
 
