@@ -11,6 +11,7 @@ const COMPONENTS = [
 document.addEventListener('DOMContentLoaded', async () => {
     await loadComponents();
     initHeroSeamlessBackground();
+    handleDeepLink();
 
     // 1. Initialize Intersection Observer for reveals
     const observerOptions = {
@@ -31,30 +32,54 @@ document.addEventListener('DOMContentLoaded', async () => {
     document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
 
     // 2. Handle smooth internal scrolling
-    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+    // Determine if we are on the main index page
+    const currentPath = window.location.pathname;
+    const isIndexPage = currentPath === '/' || currentPath.endsWith('/index.html') || currentPath.endsWith('/');
+
+    document.querySelectorAll('a[href*="#"]').forEach(anchor => {
         anchor.addEventListener('click', function (e) {
-            const targetId = this.getAttribute('href');
-            if (!targetId) return;
+            const href = this.getAttribute('href');
 
-            e.preventDefault();
+            // Extract the hash part
+            const hashIndex = href.indexOf('#');
+            if (hashIndex === -1) return;
+            const targetId = href.substring(hashIndex);
+            if (!targetId || targetId === '#') return;
 
-            // Support explicit "back to top/hero" behavior for brand link and "#" links.
-            if (targetId === '#' || targetId === '#hero') {
-                window.scrollTo({
-                    top: 0,
-                    behavior: 'smooth'
-                });
+            // Check if link points to a different page (e.g. "index.html#architecture")
+            const pagePart = href.substring(0, hashIndex);
+            if (pagePart && !isIndexPage) {
+                // We are on a subpage (privacy, terms) and the link points to index.html
+                // Let the browser handle this navigation natively — do NOT intercept
                 return;
             }
 
+            // We are on the index page, so smooth scroll to the target section
             const targetElement = document.querySelector(targetId);
-            if (!targetElement) return;
+            if (targetElement) {
+                e.preventDefault();
 
-            const targetTop = Math.max(targetElement.offsetTop - 120, 0);
-            window.scrollTo({
-                top: targetTop,
-                behavior: 'smooth'
-            });
+                // Support explicit "back to top/hero" behavior
+                if (targetId === '#hero') {
+                    window.scrollTo({
+                        top: 0,
+                        behavior: 'smooth'
+                    });
+                    return;
+                }
+
+                // Activate reveals immediately for target and its children
+                targetElement.classList.add('active');
+                targetElement.querySelectorAll('.reveal').forEach(el => el.classList.add('active'));
+
+                const rect = targetElement.getBoundingClientRect();
+                const targetTop = window.pageYOffset + rect.top - 120;
+
+                window.scrollTo({
+                    top: Math.max(targetTop, 0),
+                    behavior: 'smooth'
+                });
+            }
         });
     });
 
@@ -85,6 +110,28 @@ async function loadComponents() {
         }
         mount.innerHTML = await response.text();
     }));
+}
+
+function handleDeepLink() {
+    const hash = window.location.hash;
+    if (hash && hash !== '#') {
+        const targetElement = document.querySelector(hash);
+        if (targetElement) {
+            // Force activation of reveal animations for target section
+            targetElement.classList.add('active');
+            targetElement.querySelectorAll('.reveal').forEach(el => el.classList.add('active'));
+
+            // Larger delay for deep links to allow layout to settle after async injections
+            setTimeout(() => {
+                const rect = targetElement.getBoundingClientRect();
+                const targetTop = window.pageYOffset + rect.top - 120;
+                window.scrollTo({
+                    top: Math.max(targetTop, 0),
+                    behavior: 'smooth'
+                });
+            }, 350);
+        }
+    }
 }
 
 function initAIInteraction() {
