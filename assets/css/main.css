@@ -665,25 +665,22 @@ p {
 }
 
 
-/* Early Access Page Flip Transition */
-.page-flip-overlay {
+/* Early Access Fade Transition */
+.fade-transition-overlay {
     position: fixed;
     top: 0;
-    right: 0;
+    left: 0;
     width: 100vw;
     height: 100vh;
     background: #e3e3e3;
     /* matches early-access bg */
     z-index: 99999;
-    transform-origin: top right;
-    transform: perspective(2200px) rotate3d(-1, 1, 0, 90deg);
     opacity: 0;
     pointer-events: none;
-    transition: transform 0.8s cubic-bezier(0.77, 0, 0.175, 1), opacity 0.3s ease;
+    transition: opacity 0.5s ease-in-out;
 }
 
-.page-flip-overlay.is-flipping {
-    transform: perspective(2200px) rotate3d(0, 0, 0, 0deg);
+.fade-transition-overlay.is-visible {
     opacity: 1;
     pointer-events: all;
 }

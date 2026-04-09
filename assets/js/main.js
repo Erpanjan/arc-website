@@ -25,7 +25,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     initSmoothScrolling();
     initAIInteraction();
     initTelemetry();
-    initFlipTransition();
+    initFadeTransition();
 });
 
 // ─── Component Loader ───────────────────────────────────────────────────────
@@ -188,11 +188,11 @@ function initTelemetry() {
     }, 4000);
 }
 
-// ─── Page Flip Transition ───────────────────────────────────────────────────
-// Animated page-flip overlay when navigating to the Early Access form.
-function initFlipTransition() {
+// ─── Page Fade Transition ───────────────────────────────────────────────────
+// Animated fade overlay when navigating to the Early Access form.
+function initFadeTransition() {
     const overlay = document.createElement('div');
-    overlay.className = 'page-flip-overlay';
+    overlay.className = 'fade-transition-overlay';
     document.body.appendChild(overlay);
 
     document.body.addEventListener('click', (e) => {
@@ -202,16 +202,16 @@ function initFlipTransition() {
         const href = link.getAttribute('href');
         if (href && href.includes('early-access.html')) {
             e.preventDefault();
-            overlay.classList.add('is-flipping');
-            setTimeout(() => { window.location.href = href; }, 750);
+            overlay.classList.add('is-visible');
+            setTimeout(() => { window.location.href = href; }, 500);
         }
     });
 
     // Reset overlay when returning via back/forward cache
     window.addEventListener('pageshow', (e) => {
-        if (e.persisted || overlay.classList.contains('is-flipping')) {
+        if (e.persisted || overlay.classList.contains('is-visible')) {
             overlay.style.transition = 'none';
-            overlay.classList.remove('is-flipping');
+            overlay.classList.remove('is-visible');
             setTimeout(() => { overlay.style.transition = ''; }, 50);
         }
     });
