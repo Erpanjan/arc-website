@@ -20,7 +20,7 @@ Run these commands from the **website root directory**:
 ```
 website/
 ├── index.html              # Main landing page
-├── privacy.html            # Privacy Policy (Version 2.0)
+├── privacy.html            # Privacy Policy
 ├── terms.html              # Service Agreement
 ├── early-access.html       # Early Access signup form
 ├── assets/
@@ -31,7 +31,7 @@ website/
 │       ├── main.js         # Core app logic (components, nav, animations)
 │       ├── early-access.js # Form submission handler
 │       └── supabase-config.js # Supabase credentials
-├── components/             # Reusable HTML partials (injected by main.js)
+├── components/             # HTML partials injected dynamically by main.js
 │   ├── nav.html
 │   ├── hero.html
 │   ├── interact.html
@@ -39,10 +39,12 @@ website/
 │   ├── monitoring.html
 │   ├── accessibility.html
 │   └── cta-footer.html
-├── docs/                   # Reference documents (not served)
-│   ├── Data Privacy Policy.docx
-│   ├── Service Agreement.docx
-│   └── supabase-early-access-setup.sql
+├── docs/
+│   ├── legal/              # Source documents for terms & privacy pages
+│   │   ├── Data Privacy Policy.docx
+│   │   └── Service Agreement.docx
+│   └── database/           # Database setup scripts (not served)
+│       └── supabase-early-access-setup.sql
 ├── main.js                 # Symlink → assets/js/main.js (backward compat)
 └── style.v2.css            # Symlink → assets/css/main.css (backward compat)
 ```
