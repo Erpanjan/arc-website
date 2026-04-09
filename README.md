@@ -1,6 +1,6 @@
-# Website
+# ARC Website
 
-Static website for the investor pitch.
+Static marketing website for the ARC AI Companion platform.
 
 ## Quick Start
 
@@ -8,7 +8,6 @@ Run these commands from the **website root directory**:
 
 1.  **Start the server**:
     ```bash
-    # Try port 8080 first
     python3 -m http.server 8080
     ```
 2.  **View the site**:
@@ -16,9 +15,43 @@ Run these commands from the **website root directory**:
 
 ---
 
+## Project Structure
+
+```
+website/
+├── index.html              # Main landing page
+├── privacy.html            # Privacy Policy (Version 2.0)
+├── terms.html              # Service Agreement
+├── early-access.html       # Early Access signup form
+├── assets/
+│   ├── css/
+│   │   ├── main.css        # Global design system & styles
+│   │   └── early-access.css# Early Access form styles
+│   └── js/
+│       ├── main.js         # Core app logic (components, nav, animations)
+│       ├── early-access.js # Form submission handler
+│       └── supabase-config.js # Supabase credentials
+├── components/             # Reusable HTML partials (injected by main.js)
+│   ├── nav.html
+│   ├── hero.html
+│   ├── interact.html
+│   ├── solution.html
+│   ├── monitoring.html
+│   ├── accessibility.html
+│   └── cta-footer.html
+├── docs/                   # Reference documents (not served)
+│   ├── Data Privacy Policy.docx
+│   ├── Service Agreement.docx
+│   └── supabase-early-access-setup.sql
+├── main.js                 # Symlink → assets/js/main.js (backward compat)
+└── style.v2.css            # Symlink → assets/css/main.css (backward compat)
+```
+
+---
+
 ## Troubleshooting: "Address already in use"
 
-If you see an error saying `[Errno 48] Address already in use`, it means another server is already running on that port.
+If you see `[Errno 48] Address already in use`:
 
 **Option A: Use a different port**
 ```bash
@@ -27,7 +60,6 @@ python3 -m http.server 8888
 
 **Option B: Kill the existing process (macOS)**
 ```bash
-# Find and kill the process on port 8080
 lsof -ti:8080 | xargs kill -9
 ```
 
@@ -37,11 +69,4 @@ lsof -ti:8080 | xargs kill -9
 
 Press `Ctrl + C` in the terminal where the server is running.
 
-If the terminal is closed but the server is still running, use the **Option B** command above to clear the port.
-
-## Structure
-
-- `index.html`: Main page shell
-- `style.v2.css`: Active stylesheet
-- `main.js`: Component loader and interactions
-- `components/`: Reusable HTML sections
+If the terminal is closed but the server is still running, use **Option B** above.

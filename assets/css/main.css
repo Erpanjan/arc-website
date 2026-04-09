@@ -18,7 +18,6 @@
     --shadow-float: 0 20px 40px -10px rgba(0, 0, 0, 0.05);
     --shadow-sharp: 0 4px 12px rgba(0, 0, 0, 0.03);
 
-    --font-serif: 'Inter', sans-serif;
     --font-sans: 'Inter', sans-serif;
     --font-mono: 'JetBrains Mono', monospace;
 
@@ -32,7 +31,6 @@
 }
 
 html {
-    scroll-behavior: smooth;
     background-color: var(--text-primary);
 }
 
@@ -49,7 +47,7 @@ body {
 h1,
 h2,
 .serif-text {
-    font-family: var(--font-serif);
+    font-family: var(--font-sans);
     font-weight: 500;
     letter-spacing: -0.02em;
     line-height: 1.1;
@@ -220,29 +218,12 @@ p {
     background-image: none !important;
 }
 
-.hero-bg-video {
-    display: none;
-    position: absolute;
-    inset: 0;
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    z-index: 0;
-    pointer-events: none;
-    opacity: 0;
-    transition: opacity 320ms ease;
-}
-
 .hero-bg-media {
     position: absolute;
     inset: 0;
     background-color: #DDE3EA;
     z-index: 0;
     overflow: hidden;
-}
-
-.hero-bg-video.is-active {
-    opacity: 1;
 }
 
 .hero-content {
@@ -393,7 +374,7 @@ p {
 
 .vltc-logo {
     font-size: 42px;
-    font-family: var(--font-serif);
+    font-family: var(--font-sans);
     font-weight: 900;
     color: #0A0A0A;
     letter-spacing: -0.035em;
@@ -534,7 +515,7 @@ p {
 }
 
 .ai-transcription {
-    font-family: var(--font-serif);
+    font-family: var(--font-sans);
     font-weight: 500;
     font-size: 2.25rem;
     letter-spacing: -0.02em;

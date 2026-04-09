@@ -1,3 +1,9 @@
+/**
+ * ARC Website — Main Application Script
+ * Handles component loading, navigation, scroll reveals, and interactive elements.
+ */
+
+// ─── Configuration ──────────────────────────────────────────────────────────
 const COMPONENTS = [
     'nav',
     'hero',
@@ -8,91 +14,23 @@ const COMPONENTS = [
     'cta-footer'
 ];
 
+const COMPONENT_VERSION = '20260409';
+const NAV_OFFSET = 120; // px offset from top when scrolling to sections
+
+// ─── Boot ───────────────────────────────────────────────────────────────────
 document.addEventListener('DOMContentLoaded', async () => {
     await loadComponents();
-    initHeroSeamlessBackground();
     handleDeepLink();
-
-    // 1. Initialize Intersection Observer for reveals
-    const observerOptions = {
-        root: null,
-        rootMargin: '0px 0px -100px 0px',
-        threshold: 0.1
-    };
-
-    const observer = new IntersectionObserver((entries) => {
-        entries.forEach(entry => {
-            if (entry.isIntersecting) {
-                entry.target.classList.add('active');
-                observer.unobserve(entry.target);
-            }
-        });
-    }, observerOptions);
-
-    document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
-
-    // 2. Handle smooth internal scrolling
-    // Determine if we are on the main index page
-    const currentPath = window.location.pathname;
-    const isIndexPage = currentPath === '/' || currentPath.endsWith('/index.html') || currentPath.endsWith('/');
-
-    document.querySelectorAll('a[href*="#"]').forEach(anchor => {
-        anchor.addEventListener('click', function (e) {
-            const href = this.getAttribute('href');
-
-            // Extract the hash part
-            const hashIndex = href.indexOf('#');
-            if (hashIndex === -1) return;
-            const targetId = href.substring(hashIndex);
-            if (!targetId || targetId === '#') return;
-
-            // Check if link points to a different page (e.g. "index.html#architecture")
-            const pagePart = href.substring(0, hashIndex);
-            if (pagePart && !isIndexPage) {
-                // We are on a subpage (privacy, terms) and the link points to index.html
-                // Let the browser handle this navigation natively — do NOT intercept
-                return;
-            }
-
-            // We are on the index page, so smooth scroll to the target section
-            const targetElement = document.querySelector(targetId);
-            if (targetElement) {
-                e.preventDefault();
-
-                // Support explicit "back to top/hero" behavior
-                if (targetId === '#hero') {
-                    window.scrollTo({
-                        top: 0,
-                        behavior: 'smooth'
-                    });
-                    return;
-                }
-
-                // Activate reveals immediately for target and its children
-                targetElement.classList.add('active');
-                targetElement.querySelectorAll('.reveal').forEach(el => el.classList.add('active'));
-
-                const rect = targetElement.getBoundingClientRect();
-                const targetTop = window.pageYOffset + rect.top - 120;
-
-                window.scrollTo({
-                    top: Math.max(targetTop, 0),
-                    behavior: 'smooth'
-                });
-            }
-        });
-    });
-
-    // 3. AI Interaction Logic (Typewriter Effect)
+    initRevealObserver();
+    initSmoothScrolling();
     initAIInteraction();
-
-    // 4. Telemetry Pulse Logic
     initTelemetry();
-
-    // 5. Page Flip Transition to Early Access
     initFlipTransition();
 });
 
+// ─── Component Loader ───────────────────────────────────────────────────────
+// Fetches and injects HTML partials into matching [data-component] mount points.
+// Components without a mount point on the current page are silently skipped.
 async function loadComponents() {
     const mounts = COMPONENTS
         .map(name => ({
@@ -102,38 +40,92 @@ async function loadComponents() {
         .filter(entry => entry.mount);
 
     await Promise.all(mounts.map(async ({ name, mount }) => {
-        const response = await fetch(`components/${name}.html?v=20260224`, {
+        const response = await fetch(`components/${name}.html?v=${COMPONENT_VERSION}`, {
             cache: 'no-store'
         });
         if (!response.ok) {
-            throw new Error(`Failed to load component: ${name}`);
+            console.warn(`[ARC] Failed to load component: ${name}`);
+            return;
         }
         mount.innerHTML = await response.text();
     }));
 }
 
+// ─── Deep Link Handler ──────────────────────────────────────────────────────
+// When index.html loads with a hash (e.g. from a subpage nav link), scroll to
+// the target section after components have been injected into the DOM.
 function handleDeepLink() {
     const hash = window.location.hash;
-    if (hash && hash !== '#') {
-        const targetElement = document.querySelector(hash);
-        if (targetElement) {
-            // Force activation of reveal animations for target section
-            targetElement.classList.add('active');
-            targetElement.querySelectorAll('.reveal').forEach(el => el.classList.add('active'));
+    if (!hash || hash === '#') return;
 
-            // Larger delay for deep links to allow layout to settle after async injections
-            setTimeout(() => {
-                const rect = targetElement.getBoundingClientRect();
-                const targetTop = window.pageYOffset + rect.top - 120;
-                window.scrollTo({
-                    top: Math.max(targetTop, 0),
-                    behavior: 'smooth'
-                });
-            }, 350);
-        }
-    }
+    const target = document.querySelector(hash);
+    if (!target) return;
+
+    // Force-reveal the target so it's visible before scrolling
+    activateReveals(target);
+
+    // Allow layout to settle after async component injection
+    setTimeout(() => scrollToElement(target), 350);
 }
 
+// ─── Scroll Reveal (Intersection Observer) ──────────────────────────────────
+// Elements with class "reveal" fade in when they enter the viewport.
+function initRevealObserver() {
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('active');
+                observer.unobserve(entry.target);
+            }
+        });
+    }, {
+        root: null,
+        rootMargin: '0px 0px -100px 0px',
+        threshold: 0.1
+    });
+
+    document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+}
+
+// ─── Smooth Scrolling ───────────────────────────────────────────────────────
+// On the index page: intercepts anchor clicks for smooth in-page scrolling.
+// On subpages (privacy, terms): lets the browser navigate natively to index.html.
+function initSmoothScrolling() {
+    const path = window.location.pathname;
+    const isIndexPage = path === '/' || path.endsWith('/index.html');
+
+    document.querySelectorAll('a[href*="#"]').forEach(anchor => {
+        anchor.addEventListener('click', function (e) {
+            const href = this.getAttribute('href');
+            const hashIndex = href.indexOf('#');
+            if (hashIndex === -1) return;
+
+            const targetId = href.substring(hashIndex);
+            if (!targetId || targetId === '#') return;
+
+            // On subpages, don't intercept cross-page links — let the browser navigate
+            const pagePart = href.substring(0, hashIndex);
+            if (pagePart && !isIndexPage) return;
+
+            // On the index page, smooth scroll to the target section
+            const target = document.querySelector(targetId);
+            if (!target) return;
+
+            e.preventDefault();
+
+            if (targetId === '#hero') {
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+                return;
+            }
+
+            activateReveals(target);
+            scrollToElement(target);
+        });
+    });
+}
+
+// ─── AI Interaction (Question Rotator) ──────────────────────────────────────
+// Cycles through AI consultation questions with a fade-in/out animation.
 function initAIInteraction() {
     const questions = [
         "How is your wealth currently divided up?",
@@ -144,48 +136,48 @@ function initAIInteraction() {
         "Is your family protection plan up to date?"
     ];
 
-    let questionIndex = 0;
-    const textElement = document.getElementById('typing-text');
-    if (!textElement) return;
+    const el = document.getElementById('typing-text');
+    if (!el) return;
 
-    // Set initial text
-    textElement.textContent = `"${questions[0]}"`;
+    let index = 0;
+    el.textContent = `"${questions[0]}"`;
 
     setInterval(() => {
-        textElement.style.opacity = 0;
+        el.style.opacity = 0;
         setTimeout(() => {
-            questionIndex = (questionIndex + 1) % questions.length;
-            textElement.textContent = `"${questions[questionIndex]}"`;
-            textElement.style.opacity = 1;
+            index = (index + 1) % questions.length;
+            el.textContent = `"${questions[index]}"`;
+            el.style.opacity = 1;
         }, 500);
     }, 2000);
 }
 
+// ─── Telemetry Pulse (Monitoring Tiles) ─────────────────────────────────────
+// Simulates live status updates on the monitoring dashboard tiles.
 function initTelemetry() {
     const tiles = [
-        { id: 'tile-markets', normal: 'Tracking', updates: ['Volatility Spike', 'Bull Run', 'Market Flat', 'Tracking'] },
-        { id: 'tile-protection', normal: 'Secure', updates: ['Policy Review', 'Synced', 'Encrypted', 'Secure'] },
-        { id: 'tile-life', normal: 'Synced', updates: ['Update Detected', 'Planning', 'Locked', 'Synced'] },
-        { id: 'tile-health', normal: 'Live', updates: ['Vitals High', 'Rested', 'Optimized', 'Live'] },
-        { id: 'tile-cashflow', normal: 'Balanced', updates: ['Surplus', 'Budget Alert', 'Stable', 'Balanced'] }
+        { id: 'tile-markets',    normal: 'Tracking', updates: ['Volatility Spike', 'Bull Run', 'Market Flat'] },
+        { id: 'tile-protection', normal: 'Secure',   updates: ['Policy Review', 'Synced', 'Encrypted'] },
+        { id: 'tile-life',      normal: 'Synced',    updates: ['Update Detected', 'Planning', 'Locked'] },
+        { id: 'tile-health',    normal: 'Live',      updates: ['Vitals High', 'Rested', 'Optimized'] },
+        { id: 'tile-cashflow',  normal: 'Balanced',  updates: ['Surplus', 'Budget Alert', 'Stable'] }
     ];
 
     setInterval(() => {
-        // Pick a random tile to "pulse" or update
         const tileData = tiles[Math.floor(Math.random() * tiles.length)];
         const tile = document.getElementById(tileData.id);
         if (!tile) return;
 
         const statusText = tile.querySelector('.status-text');
-        const isNormal = statusText.textContent === tileData.normal;
+        if (!statusText) return;
 
-        if (isNormal) {
-            // "Active" update
-            const randomUpdate = tileData.updates[Math.floor(Math.random() * (tileData.updates.length - 1))];
-            statusText.textContent = randomUpdate;
+        if (statusText.textContent === tileData.normal) {
+            // Show a random status update
+            const update = tileData.updates[Math.floor(Math.random() * tileData.updates.length)];
+            statusText.textContent = update;
 
-            // If it's a "warning" type update (just for visual flair)
-            if (randomUpdate.includes('Spike') || randomUpdate.includes('Alert')) {
+            // Visual warning for critical updates
+            if (update.includes('Spike') || update.includes('Alert')) {
                 tile.classList.add('warning');
             }
         } else {
@@ -196,75 +188,8 @@ function initTelemetry() {
     }, 4000);
 }
 
-function initHeroSeamlessBackground() {
-    const videos = Array.from(document.querySelectorAll('.hero-bg-video'));
-    if (videos.length < 2) return;
-
-    let activeIndex = 0;
-    let switching = false;
-    const crossfadeMs = 700;
-    const switchLeadSeconds = 0.9;
-    const nextStartOffsetSeconds = 0.08;
-
-    videos.forEach((video, index) => {
-        video.muted = true;
-        video.playsInline = true;
-        if (index !== activeIndex) {
-            video.pause();
-            video.currentTime = 0;
-            video.classList.remove('is-active');
-        } else {
-            video.classList.add('is-active');
-            void video.play().catch(() => { });
-        }
-    });
-
-    const activeVideo = () => videos[activeIndex];
-    const standbyVideo = () => videos[(activeIndex + 1) % videos.length];
-
-    const switchVideo = async () => {
-        if (switching) return;
-        switching = true;
-
-        const current = activeVideo();
-        const next = standbyVideo();
-
-        try {
-            next.currentTime = nextStartOffsetSeconds;
-            await next.play();
-        } catch (_) {
-            switching = false;
-            return;
-        }
-
-        next.classList.add('is-active');
-        current.classList.remove('is-active');
-
-        setTimeout(() => {
-            current.pause();
-            current.currentTime = 0;
-            activeIndex = (activeIndex + 1) % videos.length;
-            switching = false;
-        }, crossfadeMs + 40);
-    };
-
-    const tick = () => {
-        const current = activeVideo();
-        if (!current.duration || Number.isNaN(current.duration)) return;
-
-        if (current.duration - current.currentTime <= switchLeadSeconds) {
-            void switchVideo();
-        }
-    };
-
-    videos.forEach((video) => {
-        video.addEventListener('timeupdate', tick);
-        video.addEventListener('ended', () => {
-            void switchVideo();
-        });
-    });
-}
-
+// ─── Page Flip Transition ───────────────────────────────────────────────────
+// Animated page-flip overlay when navigating to the Early Access form.
 function initFlipTransition() {
     const overlay = document.createElement('div');
     overlay.className = 'page-flip-overlay';
@@ -272,26 +197,37 @@ function initFlipTransition() {
 
     document.body.addEventListener('click', (e) => {
         const link = e.target.closest('a');
-        if (link && link.getAttribute('href') && link.getAttribute('href').includes('early-access.html')) {
+        if (!link) return;
+
+        const href = link.getAttribute('href');
+        if (href && href.includes('early-access.html')) {
             e.preventDefault();
             overlay.classList.add('is-flipping');
-
-            // Wait for animation to finish before navigating
-            setTimeout(() => {
-                window.location.href = link.getAttribute('href');
-            }, 750);
+            setTimeout(() => { window.location.href = href; }, 750);
         }
     });
 
-    // Reset overlay in case the user navigates back to this page
+    // Reset overlay when returning via back/forward cache
     window.addEventListener('pageshow', (e) => {
         if (e.persisted || overlay.classList.contains('is-flipping')) {
-            // briefly disable transition for instant reset
             overlay.style.transition = 'none';
             overlay.classList.remove('is-flipping');
-            setTimeout(() => {
-                overlay.style.transition = '';
-            }, 50);
+            setTimeout(() => { overlay.style.transition = ''; }, 50);
         }
     });
+}
+
+// ─── Utility Functions ──────────────────────────────────────────────────────
+
+// Force-activates reveal animations on a target element and its children.
+function activateReveals(element) {
+    element.classList.add('active');
+    element.querySelectorAll('.reveal').forEach(el => el.classList.add('active'));
+}
+
+// Scrolls smoothly to a target element with the configured nav offset.
+function scrollToElement(element) {
+    const rect = element.getBoundingClientRect();
+    const top = window.pageYOffset + rect.top - NAV_OFFSET;
+    window.scrollTo({ top: Math.max(top, 0), behavior: 'smooth' });
 }
