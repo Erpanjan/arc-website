@@ -203,7 +203,7 @@ function initFadeTransition() {
         if (href && href.includes('early-access.html')) {
             e.preventDefault();
             overlay.classList.add('is-visible');
-            setTimeout(() => { window.location.href = href; }, 500);
+            setTimeout(() => { window.location.href = href; }, 300);
         }
     });
 

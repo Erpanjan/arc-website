@@ -73,7 +73,7 @@ body {
     padding: clamp(56px, 7vw, 94px) clamp(16px, 4vw, 54px) clamp(32px, 4vw, 48px);
     opacity: 0;
     transform: translateY(10px);
-    animation: fadeUpIn 0.8s ease-out 0.1s forwards;
+    animation: fadeUpIn 0.4s ease-out forwards;
 }
 
 @keyframes fadeUpIn {
