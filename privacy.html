@@ -127,6 +127,24 @@
             color: var(--text-primary);
             margin-bottom: 0;
         }
+
+        @media (max-width: 768px) {
+            .legal-header { padding: 120px 0 60px; }
+            .legal-content { padding: 60px 0; }
+            .legal-text h2 { margin: 60px 0 24px; }
+            .policy-overview { padding: 28px; }
+        }
+
+        @media (max-width: 480px) {
+            .legal-header { padding: 100px 0 40px; }
+            .legal-content { padding: 40px 0; }
+            .legal-text h1 { margin-bottom: 32px; }
+            .legal-text h2 { margin: 40px 0 20px; }
+            .legal-text p,
+            .legal-text li { font-size: 1rem; }
+            .highlight-box { padding: 20px; }
+            .policy-overview { padding: 20px; }
+        }
     </style>
 </head>
 
