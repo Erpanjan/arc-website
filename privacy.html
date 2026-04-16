@@ -128,6 +128,87 @@
             margin-bottom: 0;
         }
 
+        .processor-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 40px 0 48px;
+            font-size: 1rem;
+            line-height: 1.7;
+        }
+
+        .processor-table th {
+            font-family: var(--font-mono);
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 0.15em;
+            font-weight: 600;
+            color: var(--text-tertiary);
+            text-align: left;
+            padding: 14px 20px;
+            background: #F8F9FA;
+            border-bottom: 2px solid var(--border-subtle);
+        }
+
+        .processor-table td {
+            padding: 28px 20px;
+            vertical-align: top;
+            color: var(--text-secondary);
+            border-bottom: 1px solid var(--border-subtle);
+            font-size: 1rem;
+        }
+
+        .processor-table td:not(:first-child) {
+            font-size: 0.85rem;
+        }
+
+        .processor-table tbody tr:last-child td {
+            border-bottom: none;
+        }
+
+        .processor-table tbody tr:hover td {
+            background: #FAFAFA;
+        }
+
+        .processor-meta {
+            display: block;
+            font-family: var(--font-mono);
+            font-size: 0.65rem;
+            color: var(--text-tertiary);
+            letter-spacing: 0.05em;
+            margin-top: 6px;
+            font-weight: 400;
+        }
+
+        @media (max-width: 900px) {
+            .processor-table thead { display: none; }
+            .processor-table, .processor-table tbody, .processor-table tr, .processor-table td {
+                display: block;
+                width: 100%;
+            }
+            .processor-table tr {
+                margin-bottom: 32px;
+                border: 1px solid var(--border-subtle);
+                border-radius: var(--radius-md);
+                overflow: hidden;
+            }
+            .processor-table td {
+                border-bottom: 1px solid var(--border-subtle);
+                padding: 20px;
+            }
+            .processor-table td:last-child { border-bottom: none; }
+            .processor-table td::before {
+                content: attr(data-label);
+                display: block;
+                font-family: var(--font-mono);
+                font-size: 0.65rem;
+                text-transform: uppercase;
+                letter-spacing: 0.15em;
+                color: var(--text-tertiary);
+                margin-bottom: 8px;
+                font-weight: 600;
+            }
+        }
+
         @media (max-width: 768px) {
             .legal-header { padding: 120px 0 60px; }
             .legal-content { padding: 60px 0; }
@@ -154,7 +235,7 @@
     <header class="legal-header">
         <div class="container">
             <div class="legal-text">
-                <div class="update-date">Effective: April 9, 2026</div>
+                <div class="update-date">Effective: April 16, 2026</div>
                 <h1>Privacy Policy</h1>
                 <p class="text-large">Your trust is our most valuable asset. This policy outlines exactly how Voluntas Long Term Capital Limited collects, uses, and protects your information, grounded in formalized legal bases and international data protection standards.</p>
             </div>
@@ -199,7 +280,7 @@
 
                     <section>
                         <h3>C. Cross-Border Data Transfers</h3>
-                        <p>Data may be transferred to and stored in jurisdictions outside of your country of residence (including jurisdictions where our cloud infrastructure providers operate). We ensure that any such transfers meet the "comparable protection" standards required by the <strong>Singapore PDPA</strong> and other international frameworks, utilizing Standard Contractual Clauses (SCCs) or equivalent legal mechanisms.</p>
+                        <p>Data may be transferred to and stored in jurisdictions outside of your country of residence, including jurisdictions where our AI and cloud sub-processors operate (see Section 3 for the full list of named processors). We ensure that any such transfers meet the "comparable protection" standards required by the <strong>Singapore PDPA</strong> and other international frameworks, utilizing Standard Contractual Clauses (SCCs) or equivalent legal mechanisms. Each sub-processor is contractually bound to uphold equivalent data protection obligations.</p>
                     </section>
 
                     <section>
@@ -243,6 +324,46 @@
                         <p>For any questions, data access requests, or to update your preferences, please contact our Data Protection Officer at:</p>
                         <p><strong>Email:</strong> support@voluntasltcapital.com</p>
                     </section>
+                </section>
+
+                <section>
+                    <h2>SECTION 3: Third-Party Processors (Sub-Processors)</h2>
+                    <p>To deliver our services, we engage the following third-party processors. Each receives only the data necessary for its designated function, and each is contractually bound — through Data Processing Agreements (DPAs) that incorporate Standard Contractual Clauses (SCCs) or equivalent mechanisms — to apply data protection standards equivalent to those required under the Singapore PDPA and other applicable frameworks.</p>
+
+                    <table class="processor-table">
+                        <thead>
+                            <tr>
+                                <th>Processor</th>
+                                <th>Purpose</th>
+                                <th>Data Received</th>
+                                <th>Protection Basis</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td data-label="Processor"><strong>OpenAI, L.L.C.</strong><br><span class="processor-meta">United States</span><br><span class="processor-meta">openai.com/policies/privacy-policy</span></td>
+                                <td data-label="Purpose">OpenAI powers the AI reasoning, conversational processing, and knowledge extraction within the ARC application. When you interact with ARC's assistant, your queries are processed by OpenAI's models to generate responses.</td>
+                                <td data-label="Data Received">OpenAI receives the text content of your queries and the conversation history necessary to maintain context. No biometric data, financial account credentials, or government-issued identification numbers are transmitted to OpenAI.</td>
+                                <td data-label="Protection Basis">OpenAI processes data under a Data Processing Agreement that incorporates Standard Contractual Clauses for transfers to the United States. OpenAI is contractually bound to equivalent data protection obligations and does not use data submitted via the API to train its models without a separate agreement.</td>
+                            </tr>
+                            <tr>
+                                <td data-label="Processor"><strong>ElevenLabs, Inc.</strong><br><span class="processor-meta">United States</span><br><span class="processor-meta">elevenlabs.io/privacy</span></td>
+                                <td data-label="Purpose">ElevenLabs provides the voice synthesis (text-to-speech) and voice transcription (speech-to-text) capabilities that power ARC's voice interface, allowing you to speak to and hear responses from the application.</td>
+                                <td data-label="Data Received">ElevenLabs receives audio input captured during voice sessions for transcription, and text content intended to be converted into spoken responses. Voice data is processed transiently and is not retained by ElevenLabs beyond the duration of the API request unless you separately opt into ElevenLabs' own consumer services.</td>
+                                <td data-label="Protection Basis">ElevenLabs processes data under a Data Processing Agreement incorporating Standard Contractual Clauses. ElevenLabs is contractually bound to apply equivalent data protection obligations to all data it processes on our behalf.</td>
+                            </tr>
+                            <tr>
+                                <td data-label="Processor"><strong>Google Cloud (Google LLC)</strong><br><span class="processor-meta">United States</span><br><span class="processor-meta">cloud.google.com/security/privacy</span></td>
+                                <td data-label="Purpose">Google Cloud provides the underlying cloud infrastructure, storage, and backend services that host and operate the ARC platform. All application data at rest and in transit is processed within Google Cloud's environment.</td>
+                                <td data-label="Data Received">Google Cloud receives encrypted application data, operational logs, and the user account information necessary to run and maintain the service. Data is stored in encrypted form and Google does not access it for its own purposes.</td>
+                                <td data-label="Protection Basis">Google Cloud processes data under Google's Data Processing Addendum, which incorporates Standard Contractual Clauses and commits Google to equivalent data protection standards. Google Cloud is certified under ISO 27001 and other internationally recognised security frameworks, with regional data residency options available.</td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <div class="highlight-box">
+                        <p>We do not sell your personal data to any of these processors or to any other third party. We do not share your data with advertising networks, data brokers, or any entity outside the sub-processors listed above (except where required by law or with your explicit consent). We review our sub-processor list on an ongoing basis and will update this section if processors are added or removed.</p>
+                    </div>
                 </section>
             </article>
         </div>
