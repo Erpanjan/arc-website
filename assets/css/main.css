@@ -147,15 +147,12 @@ p {
 }
 
 .logo {
-    display: flex;
-    align-items: center;
+    font-family: 'Playfair Display', serif;
+    font-size: 1.25rem;
+    font-weight: 600;
+    font-style: italic;
+    color: var(--text-primary);
     text-decoration: none;
-}
-
-.logo-img {
-    height: 28px;
-    width: auto;
-    display: block;
 }
 
 .nav-links {
@@ -945,8 +942,8 @@ p {
         gap: 16px;
     }
 
-    .logo-img {
-        height: 24px;
+    .logo {
+        font-size: 1.1rem;
     }
 
     .cta-section {
