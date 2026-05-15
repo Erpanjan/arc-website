@@ -1,0 +1,565 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Voluntas Long Term Capital</title>
+    <link rel="icon" href="data:,">
+    <meta name="description"
+        content="Voluntas Long Term Capital is the company behind ARC — an digital companion for personalized wealth and healthcare planning for families.">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400;1,600&family=Inter:wght@300;400;500;700&family=JetBrains+Mono:wght@400;500&display=swap"
+        rel="stylesheet">
+
+    <style>
+        :root {
+            --bg-page: #FDFCFB;
+            --bg-surface: #FFFFFF;
+            --bg-alt: #F4F2EE;
+            --text-primary: #0A0A0A;
+            --text-secondary: #5A5A5A;
+            --text-tertiary: #8C8C8C;
+            --border-subtle: rgba(0, 0, 0, 0.06);
+            --border-defined: rgba(0, 0, 0, 0.12);
+            --radius-sm: 12px;
+            --radius-md: 24px;
+            --radius-pill: 100px;
+            --shadow-float: 0 20px 40px -10px rgba(0, 0, 0, 0.05);
+            --shadow-sharp: 0 4px 12px rgba(0, 0, 0, 0.03);
+            --font-sans: 'Inter', sans-serif;
+            --font-serif: 'Playfair Display', serif;
+            --font-mono: 'JetBrains Mono', monospace;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        a, button { -webkit-tap-highlight-color: transparent; touch-action: manipulation; }
+
+        html { background-color: var(--text-primary); }
+
+        body {
+            background-color: #FFFFFF;
+            color: var(--text-primary);
+            font-family: var(--font-sans);
+            font-size: 16px;
+            line-height: 1.6;
+            overflow-x: hidden;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            -webkit-text-size-adjust: 100%;
+            text-size-adjust: 100%;
+        }
+
+        h1, h2 { font-family: var(--font-sans); font-weight: 500; letter-spacing: -0.02em; line-height: 1.1; }
+        h1 { font-size: clamp(3rem, 6vw, 5rem); }
+        h2 { font-size: clamp(2.2rem, 4vw, 3.5rem); }
+        h3 { font-family: var(--font-sans); font-size: 1.4rem; font-weight: 500; letter-spacing: -0.03em; }
+        p { color: var(--text-secondary); font-weight: 300; }
+
+        .mono-caps {
+            font-family: var(--font-mono);
+            font-size: 0.65rem;
+            text-transform: uppercase;
+            letter-spacing: 0.2em;
+            color: var(--text-tertiary);
+            font-weight: 400;
+        }
+
+        .container { max-width: 1100px; margin: 0 auto; padding: 0 40px; }
+        .section { padding: 120px 0; position: relative; }
+        .accent-line { width: 48px; height: 2px; background-color: var(--text-primary); margin-bottom: 24px; }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-family: var(--font-mono);
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            padding: 0 32px;
+            height: 48px;
+            border-radius: var(--radius-pill);
+            text-decoration: none;
+            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+            cursor: pointer;
+        }
+
+        .btn-primary { background: var(--text-primary); color: #fff; }
+        .btn-primary:hover { background: #000; transform: scale(1.02); box-shadow: 0 10px 20px rgba(0,0,0,0.1); }
+        .btn-outline { border: 1px solid var(--border-defined); color: var(--text-primary); background: transparent; }
+        .btn-outline:hover { border-color: var(--text-primary); }
+
+        /* ── Nav ── */
+        .nav-wrapper {
+            position: fixed;
+            top: 24px;
+            left: 0;
+            width: 100%;
+            z-index: 100;
+            display: flex;
+            justify-content: center;
+            padding: 0 20px;
+            pointer-events: none;
+        }
+
+        .nav-pill {
+            background: rgba(255,255,255,0.75);
+            backdrop-filter: blur(24px);
+            -webkit-backdrop-filter: blur(24px);
+            border: 1px solid var(--border-subtle);
+            border-radius: var(--radius-pill);
+            padding: 8px 8px 8px 32px;
+            display: flex;
+            align-items: center;
+            gap: 48px;
+            box-shadow: var(--shadow-sharp);
+            pointer-events: auto;
+        }
+
+        .logo {
+            font-family: var(--font-serif);
+            font-size: 1rem;
+            font-weight: 600;
+            font-style: italic;
+            color: var(--text-primary);
+            text-decoration: none;
+            white-space: nowrap;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 32px;
+        }
+
+        .nav-links a {
+            font-family: var(--font-mono);
+            font-size: 0.65rem;
+            text-transform: uppercase;
+            letter-spacing: 0.15em;
+            text-decoration: none;
+            color: var(--text-secondary);
+            transition: color 0.3s;
+        }
+
+        .nav-links a:hover { color: var(--text-primary); }
+
+        /* ── Shared full-screen section ── */
+        .fullscreen {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+            padding-top: 120px;
+            padding-bottom: 80px;
+        }
+
+        .fullscreen-content { position: relative; z-index: 2; }
+
+        /* ── Hero ── */
+        .hero {
+            background-color: #DDE3EA;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: rgba(255,255,255,0.58);
+            z-index: 1;
+        }
+
+        .hero-kicker { margin-bottom: 16px; }
+
+        .hero-subtitle {
+            font-weight: 300;
+            font-size: clamp(1rem, 1.8vw, 1.2rem);
+            color: var(--text-secondary);
+            margin-bottom: 48px;
+            max-width: 780px;
+            line-height: 1.5;
+            margin-top: 24px;
+        }
+
+        /* ── Product section ── */
+        .product-section {
+            background-color: var(--bg-alt);
+        }
+
+        .product-section::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: rgba(255,255,255,0.3);
+            z-index: 1;
+        }
+
+        .product-grid {
+            display: grid;
+            grid-template-columns: 1fr 1.2fr;
+            gap: 80px;
+            align-items: center;
+        }
+
+        /* ── Phone mockup ── */
+        .phone-mockup {
+            width: 260px;
+            height: 540px;
+            background: #050505;
+            border: 10px solid #050505;
+            border-radius: 52px;
+            position: relative;
+            box-shadow: 0 50px 100px -20px rgba(0,0,0,0.35), 0 30px 60px -30px rgba(0,0,0,0.4), 0 0 0 1px rgba(255,255,255,0.08);
+        }
+
+        .phone-notch {
+            position: absolute;
+            top: 12px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80px;
+            height: 6px;
+            background: #1a1a1a;
+            border-radius: 3px;
+            z-index: 10;
+        }
+
+        .phone-screen {
+            width: 100%;
+            height: 100%;
+            border-radius: 44px;
+            overflow: hidden;
+        }
+
+        .phone-home-indicator {
+            position: absolute;
+            bottom: 8px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100px;
+            height: 4px;
+            background: rgba(255,255,255,0.15);
+            border-radius: 2px;
+            z-index: 10;
+        }
+
+        /* ── Capability list ── */
+        .capability-list { display: flex; flex-direction: column; gap: 0; }
+
+        .capability-item {
+            padding: 20px 0;
+            border-top: 1px solid var(--border-subtle);
+        }
+
+        .capability-item:last-child { border-bottom: 1px solid var(--border-subtle); }
+
+        .capability-bullets {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .capability-bullets li {
+            color: var(--text-secondary);
+            font-weight: 300;
+            font-size: 0.95rem;
+            padding-left: 16px;
+            position: relative;
+        }
+
+        .capability-bullets li::before {
+            content: '—';
+            position: absolute;
+            left: 0;
+            color: var(--text-tertiary);
+            font-family: var(--font-mono);
+            font-size: 0.7rem;
+            top: 3px;
+        }
+
+        /* ── People section ── */
+        .people-section {
+            background-color: var(--bg-page);
+        }
+
+        .team-card {
+            display: flex;
+            align-items: center;
+            gap: 48px;
+            background: var(--bg-surface);
+            border: 1px solid var(--border-subtle);
+            border-radius: var(--radius-md);
+            padding: 48px;
+            box-shadow: var(--shadow-sharp);
+            max-width: 680px;
+        }
+
+        .team-photo {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            object-fit: cover;
+            object-position: center top;
+            flex-shrink: 0;
+            border: 1px solid var(--border-subtle);
+        }
+
+        .team-name {
+            font-size: 1.4rem;
+            font-weight: 500;
+            letter-spacing: -0.02em;
+            color: var(--text-primary);
+            margin-bottom: 4px;
+        }
+
+        .team-role {
+            font-family: var(--font-mono);
+            font-size: 0.65rem;
+            text-transform: uppercase;
+            letter-spacing: 0.15em;
+            color: var(--text-tertiary);
+            margin-bottom: 20px;
+        }
+
+        .linkedin-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            text-decoration: none;
+            color: var(--text-secondary);
+            font-family: var(--font-mono);
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            border: 1px solid var(--border-defined);
+            border-radius: var(--radius-pill);
+            padding: 8px 18px;
+            transition: all 0.3s ease;
+        }
+
+        .linkedin-link:hover { border-color: var(--text-primary); color: var(--text-primary); }
+
+        .linkedin-icon { width: 14px; height: 14px; fill: currentColor; }
+
+        /* ── CTA / Footer ── */
+        .cta-section {
+            background-color: var(--text-primary);
+            color: #fff;
+            text-align: center;
+            padding: 160px 0;
+            border-radius: 40px 40px 0 0;
+            margin-top: 80px;
+        }
+
+        .cta-section h2 { color: #fff; margin-bottom: 16px; }
+
+        .cta-subtitle {
+            color: rgba(255,255,255,0.55);
+            font-weight: 300;
+            margin-bottom: 48px;
+            font-size: 1.05rem;
+        }
+
+        .footer {
+            background-color: var(--text-primary);
+            color: rgba(255,255,255,0.4);
+            padding: 40px 0;
+            border-top: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .footer-flex { display: flex; justify-content: space-between; align-items: center; }
+
+        /* ── Reveal ── */
+        .reveal { opacity: 0; transform: translateY(30px); transition: all 1s cubic-bezier(0.16, 1, 0.3, 1); }
+        .reveal.active { opacity: 1; transform: translateY(0); }
+        .delay-1 { transition-delay: 0.1s; }
+        .delay-2 { transition-delay: 0.2s; }
+        .delay-3 { transition-delay: 0.3s; }
+
+        /* ── Responsive ── */
+        @media (max-width: 1024px) {
+            .nav-links { display: none; }
+            .nav-pill { padding-right: 8px; }
+        }
+
+        @media (max-width: 768px) {
+            .container { padding: 0 24px; }
+            h1 { font-size: 2.6rem; }
+            h2 { font-size: 2rem; }
+            .product-grid { grid-template-columns: 1fr; gap: 48px; }
+            .phone-mockup { width: 200px; height: 420px; }
+            .team-card { flex-direction: column; align-items: flex-start; gap: 28px; padding: 32px; }
+            .nav-pill { gap: 24px; padding-right: 20px; }
+            .cta-section { padding: 100px 0; border-radius: 24px 24px 0 0; }
+            .footer-flex { flex-direction: column; gap: 16px; text-align: center; }
+            .fullscreen { min-height: auto; padding-top: 100px; padding-bottom: 80px; }
+        }
+
+        @media (max-width: 480px) {
+            .container { padding: 0 16px; }
+            h1 { font-size: 2rem; }
+            h2 { font-size: 1.7rem; }
+            .nav-pill { padding: 6px 20px; gap: 16px; }
+            .logo { font-size: 0.85rem; }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Nav -->
+    <div class="nav-wrapper">
+        <nav class="nav-pill reveal active">
+            <a href="#hero" class="logo">VLTC</a>
+            <div class="nav-links">
+                <a href="#product">Product</a>
+                <a href="#people">People</a>
+            </div>
+            <a href="https://www.arc-vltc.com" class="btn btn-primary" style="height: 36px; padding: 0 20px;">Visit ARC</a>
+        </nav>
+    </div>
+
+    <!-- Hero -->
+    <section id="hero" class="fullscreen hero">
+        <div class="container fullscreen-content">
+            <div class="mono-caps reveal hero-kicker">The Company</div>
+            <h1 class="reveal delay-1">
+                We Build Products<br>for Human Flourishing.
+            </h1>
+            <p class="hero-subtitle reveal delay-2">
+                Voluntas Long Term Capital is an early stage startup that builds products that improve the quality of life for families — across wealth, health, and every dimension of private life.
+            </p>
+            <div class="reveal delay-3">
+                <a href="#product" class="btn btn-primary" style="margin-right: 16px;">Our Product</a>
+                <a href="#people" class="btn btn-outline">Meet the Founder</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Product -->
+    <section id="product" class="fullscreen product-section">
+        <div class="container fullscreen-content">
+            <div class="product-grid">
+
+                <!-- Phone mockup -->
+                <div class="reveal" style="display: flex; justify-content: center;">
+                    <div class="phone-mockup">
+                        <div class="phone-notch"></div>
+                        <div class="phone-screen">
+                            <img src="IMG_8863.PNG" alt="ARC app" style="width: 100%; height: 100%; object-fit: cover; border-radius: 44px;">
+                        </div>
+                        <div class="phone-home-indicator"></div>
+                    </div>
+                </div>
+
+                <!-- Content -->
+                <div class="reveal delay-1">
+                    <div class="accent-line"></div>
+                    <div class="mono-caps" style="margin-bottom: 16px;">Our Product</div>
+                    <h2 style="margin-bottom: 24px;">ARC.<br>Family Companion.</h2>
+                    <p style="margin-bottom: 40px; font-size: 1.05rem; line-height: 1.6;">
+                        One digital companion for your family's wealth and health.
+                    </p>
+
+                    <div class="capability-list">
+                        <div class="capability-item">
+                            <div class="mono-caps" style="margin-bottom: 12px;">Wealth</div>
+                            <ul class="capability-bullets">
+                                <li>Advises on investments, insurance, savings, and personal finance</li>
+                                <li>Proposes solutions tailored to your family's current situation and future goals</li>
+                                <li>Monitors active plans and re-engages when circumstances change</li>
+                            </ul>
+                        </div>
+                        <div class="capability-item">
+                            <div class="mono-caps" style="margin-bottom: 12px;">Health</div>
+                            <ul class="capability-bullets">
+                                <li>Monitors your family's health through wearables and medical records</li>
+                                <li>Advises on medical care and daily habits tailored to each family member</li>
+                                <li>Tracks progress and re-engages as health conditions evolve</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div style="margin-top: 48px;">
+                        <a href="https://www.arc-vltc.com" class="btn btn-primary" style="margin-right: 16px;">Explore ARC →</a>
+                        <a href="https://www.arc-vltc.com/early-access.html" class="btn btn-outline">Request Early Access</a>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- People -->
+    <section id="people" class="fullscreen people-section">
+        <div class="container fullscreen-content">
+            <div class="reveal" style="margin-bottom: 64px;">
+                <div class="accent-line"></div>
+                <div class="mono-caps" style="margin-bottom: 16px;">Founding Team</div>
+                <h2>The People Behind<br>Voluntas Long Term Capital</h2>
+            </div>
+
+            <div class="team-card reveal delay-1">
+                <img src="IMG_8050.JPG" alt="Erpan J Yasen" class="team-photo">
+                <div>
+                    <div class="team-name">Erpan J Yasen</div>
+                    <div class="team-role">Founder &amp; CEO</div>
+                    <p style="margin-bottom: 24px; font-size: 0.95rem;">
+                        Building Voluntas Long Term Capital and ARC to bring intelligent, proactive financial and health planning to every family.
+                    </p>
+                    <a href="https://www.linkedin.com/in/erpan-jan-yasen" target="_blank" rel="noopener noreferrer" class="linkedin-link">
+                        <svg class="linkedin-icon" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/>
+                        </svg>
+                        LinkedIn Profile
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA -->
+    <section class="cta-section">
+        <div class="container">
+            <div class="mono-caps reveal" style="margin-bottom: 24px; color: rgba(255,255,255,0.5);">Get Started</div>
+            <h2 class="reveal delay-1">Ready to experience ARC?</h2>
+            <p class="cta-subtitle reveal delay-2">Visit arc-vltc.com to learn more and request early access.</p>
+            <div class="reveal delay-3">
+                <a href="https://www.arc-vltc.com" class="btn btn-outline"
+                    style="border-color: #fff; color: #fff; background: transparent;">Go to ARC →</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-flex mono-caps" style="margin-bottom: 20px;">
+                <span>&copy; 2026 Voluntas Long Term Capital</span>
+                <span>voluntasltcapital.com</span>
+            </div>
+            <div class="mono-caps" style="font-size: 0.55rem; color: rgba(255,255,255,0.2); text-align: center; border-top: 1px solid rgba(255,255,255,0.05); padding-top: 20px;">
+                This does not constitute financial, investment, or legal advice.
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) entry.target.classList.add('active');
+            });
+        }, { threshold: 0.1 });
+
+        document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+    </script>
+
+</body>
+</html>
